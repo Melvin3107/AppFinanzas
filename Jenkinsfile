@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     parameters {
         choice choices: ['Baseline', 'APIS', 'Full'], description: 'Type of scan that is going to perform inside the container', name: 'SCAN_TYPE'
         
@@ -12,7 +11,7 @@ pipeline {
         booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
 
         // Parámetros para Dependency-Track
-        string(name: 'DTRACK_URL', defaultValue: 'http://owasp:8090', description: 'URL del servidor Dependency-Track')
+        string(name: 'DTRACK_URL', defaultValue: 'http://localhost:8090', description: 'URL del servidor Dependency-Track')
         string(name: 'DTRACK_API_KEY', defaultValue: '', description: 'Clave API para Dependency-Track')
         string(name: 'PROJECT_NAME', defaultValue: 'my-project', description: 'Nombre del proyecto')
         string(name: 'VERSION', defaultValue: '1.0.0', description: 'Versión del proyecto')
@@ -59,11 +58,14 @@ pipeline {
                 script {
                     echo 'Running Dependency-Track analysis...'
                     sh """
-                    docker-compose run --rm owasp dependency-track-cli --url ${params.DTRACK_URL} \
-                                                                         --api-key ${params.DTRACK_API_KEY} \
-                                                                         --project-name ${params.PROJECT_NAME} \
-                                                                         --version ${params.VERSION} \
-                                                                         --bom /data/${params.BOM_FILE}
+                    docker run --rm \
+                        -v ${WORKSPACE}/data:/data \
+                        dependencytrack/cli \
+                        dependency-track-cli --url ${params.DTRACK_URL} \
+                                             --api-key ${params.DTRACK_API_KEY} \
+                                             --project-name ${params.PROJECT_NAME} \
+                                             --version ${params.VERSION} \
+                                             --bom /data/${params.BOM_FILE}
                     """
                 }
             }
@@ -111,3 +113,4 @@ pipeline {
         }
     }
 }
+
