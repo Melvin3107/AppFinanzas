@@ -1,0 +1,41 @@
+/* wwwroot/css/styles.css */
+
+body {
+    font-family: 'Roboto', sans-serif; /* Tipografía moderna */
+    margin: 0;
+    padding: 0;
+}
+
+.hero-section {
+    background-image: url('/images/hero-bg.jpg'); /* Ruta a la imagen de fondo */
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px; /* Espaciado */
+}
+
+.hero-content h1 {
+    font-size: 3rem; /* Tamaño grande para el título */
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.25rem; /* Tamaño legible para el párrafo */
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    background-color: #007bff; /* Color atractivo del botón */
+    border: none;
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Color del botón secundario */
+    border: none;
+}
+
+footer {
+    background-color: #e9ecef; /* Fondo de pie de página suave */
+    color: #6c757d; /* Color del texto en el pie de página */
+}

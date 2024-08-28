@@ -1,0 +1,111 @@
+services:
+  usuarios:
+    build:
+      context: .
+      dockerfile: Api/Usuarios/Dockerfile
+    ports:
+      - "5001:8581"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Username=postgres;Password=10enConta#;Database=usuarios;
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:latest
+    
+    container_name: postgres
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 10enConta#
+      POSTGRES_DB: usuarios
+    
+    networks:
+      - app-network
+  
+  gastos:
+    build:
+      context: .
+      dockerfile: Api/Gastos/Dockerfile
+    ports:
+      - "5002:8582"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Username=postgres;Password=10enConta#;Database=gastos;
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+      
+  
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "5008:8585"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+    networks:
+      - app-network
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    volumes:
+      - ./data:/data
+    networks:
+      - app-network
+
+  owasp:
+    image: dependencytrack/apiserver
+    container_name: owasp
+    privileged: true
+    ports:
+      - "8090:8090"
+    volumes:
+      - //d/AppFinanzas/Api/Gastos/bomg.xml:/data/bomg.xml
+      - //d/AppFinanzas/Api/Usuarios/bomu.xml:/data/bomu.xml
+      - //d/AppFinanzas/frontend/bomg.xml:/data/bom.xml
+
+    environment:
+      - SERVER_PORT=8090
+      - DB_TYPE=h2
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+          cpus: '2'
+    networks:
+      - app-network
+        
+
+    
+  pandoc:
+    image: pandoc/latex:latest  # Imagen de Pandoc con soporte para LaTeX
+    container_name: pandoc
+    volumes:
+      - .:/app  # Montar el directorio actual en /app dentro del contenedor
+    entrypoint: ["sh", "-c"]
+    command: >
+      "apt-get update &&
+       apt-get install -y pandoc &&
+       ./generate-docs.sh"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  owasp_data:

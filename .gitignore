@@ -1,0 +1,12 @@
+# Ignorar archivos y directorios específicos
+$RECYCLE.BIN/
+AppCrud/
+BOOTNXT/
+Boot/
+CRUD/
+EFI/
+SploitScan/
+System Volume Information/
+bootmgr
+csharp-crud-api-main/
+s4/
