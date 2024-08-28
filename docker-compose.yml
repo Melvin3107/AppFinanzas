@@ -66,7 +66,7 @@ services:
       - app-network
 
   owasp:
-    image: dependencytrack/apiserver
+    image: owasp/dependency-track
     container_name: owasp
     ports:
       - "8090:8090"
