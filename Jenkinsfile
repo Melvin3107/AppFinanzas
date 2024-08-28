@@ -10,6 +10,13 @@ pipeline {
         
         booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
         booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
+
+        // Parámetros para Dependency-Track
+        string(name: 'DTRACK_URL', defaultValue: 'http://owasp:8090', description: 'URL del servidor Dependency-Track')
+        string(name: 'DTRACK_API_KEY', defaultValue: '', description: 'Clave API para Dependency-Track')
+        string(name: 'PROJECT_NAME', defaultValue: 'my-project', description: 'Nombre del proyecto')
+        string(name: 'VERSION', defaultValue: '1.0.0', description: 'Versión del proyecto')
+        string(name: 'BOM_FILE', defaultValue: 'bom.xml', description: 'Nombre del archivo BOM (Bill of Materials)')
     }
 
     stages {
@@ -25,6 +32,11 @@ pipeline {
                             Run Probar Aplicación: ${params.RUN_PROBAR_APLICACION}
                             Run Correr Pruebas: ${params.RUN_CORRER_PRUEBAS}
                             Run Analizar con Dependency-Track: ${params.RUN_ANALIZAR_CON_DTRACK}
+                            Dependency-Track URL: ${params.DTRACK_URL}
+                            Dependency-Track API Key: ${params.DTRACK_API_KEY}
+                            Project Name: ${params.PROJECT_NAME}
+                            Version: ${params.VERSION}
+                            BOM File: ${params.BOM_FILE}
                         """
                 }
             }
@@ -39,7 +51,6 @@ pipeline {
             }
         }
 
-                
         stage('Dependency-Track Scan') {
             when {
                 expression { params.RUN_ANALIZAR_CON_DTRACK }
@@ -48,7 +59,11 @@ pipeline {
                 script {
                     echo 'Running Dependency-Track analysis...'
                     sh """
-
+                    docker-compose run --rm owasp dependency-track-cli --url ${params.DTRACK_URL} \
+                                                                         --api-key ${params.DTRACK_API_KEY} \
+                                                                         --project-name ${params.PROJECT_NAME} \
+                                                                         --version ${params.VERSION} \
+                                                                         --bom /data/${params.BOM_FILE}
                     """
                 }
             }
