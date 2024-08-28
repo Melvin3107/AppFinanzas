@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     parameters {
         choice choices: ['Baseline', 'APIS', 'Full'], description: 'Type of scan that is going to perform inside the container', name: 'SCAN_TYPE'
         
@@ -10,7 +11,6 @@ pipeline {
         booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
         booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
 
-        // Parámetros para Dependency-Track
         string(name: 'DTRACK_URL', defaultValue: 'http://localhost:8090', description: 'URL del servidor Dependency-Track')
         string(name: 'DTRACK_API_KEY', defaultValue: '', description: 'Clave API para Dependency-Track')
         string(name: 'PROJECT_NAME', defaultValue: 'my-project', description: 'Nombre del proyecto')
@@ -60,12 +60,12 @@ pipeline {
                     sh """
                     docker run --rm \
                         -v ${WORKSPACE}/data:/data \
-                        dependencytrack/cli \
-                        dependency-track-cli --url ${params.DTRACK_URL} \
-                                             --api-key ${params.DTRACK_API_KEY} \
-                                             --project-name ${params.PROJECT_NAME} \
-                                             --version ${params.VERSION} \
-                                             --bom /data/${params.BOM_FILE}
+                        alpine:latest \
+                        sh -c "apk add --no-cache curl jq && \
+                               curl -X POST ${params.DTRACK_URL}/api/v1/project/${params.PROJECT_NAME}/version/${params.VERSION}/bom \
+                               -H 'Authorization: Bearer ${params.DTRACK_API_KEY}' \
+                               -F 'file=@/data/${params.BOM_FILE}' \
+                               | jq ."
                     """
                 }
             }
@@ -113,4 +113,3 @@ pipeline {
         }
     }
 }
-
