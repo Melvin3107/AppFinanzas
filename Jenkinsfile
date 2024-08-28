@@ -1,130 +1,118 @@
-def scan_type
-def target
- pipeline {
-    agent {
-        label 'linux'
-    }
+pipeline {
+    agent any
+
     parameters {
-        choice  choices: ['Baseline', 'APIS', 'Full'],
-                 description: 'Type of scan that is going to perform inside the container',
-                 name: 'SCAN_TYPE'
-
-        string defaultValue: 'https://github.com/Melvin3107/AppFinanzas.git/',
-                 description: 'Target URL to scan',
-                 name: 'TARGET'
-
-        booleanParam defaultValue: true,
-                 description: 'Parameter to know if wanna generate report.',
-                 name: 'GENERATE_REPORT'
+        choice choices: ['Baseline', 'APIS', 'Full'], description: 'Type of scan that is going to perform inside the container', name: 'SCAN_TYPE'
+        
+        booleanParam(name: 'RUN_PROBAR_APLICACION', defaultValue: true, description: 'Probar aplicación')
+        booleanParam(name: 'RUN_CORRER_PRUEBAS', defaultValue: true, description: 'Correr pruebas')
+        booleanParam(name: 'RUN_ANALIZAR_CON_DTRACK', defaultValue: true, description: 'Analizar con Dependency-Track')
+        
+        booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
+        booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
     }
+
     stages {
         stage('Pipeline Info') {
             steps {
                 script {
                     echo '<--Parameter Initialization-->'
                     echo """
-                         The current parameters are:
-                             Scan Type: ${params.SCAN_TYPE}
-                             Target: ${params.TARGET}
-                             Generate report: ${params.GENERATE_REPORT}
-                         """
+                        The current parameters are:
+                            Scan Type: ${params.SCAN_TYPE}
+                            Generate Report: ${params.GENERATE_REPORT}
+                            Generate PDF Report: ${params.GENERAR_INFORME_PDF}
+                            Run Probar Aplicación: ${params.RUN_PROBAR_APLICACION}
+                            Run Correr Pruebas: ${params.RUN_CORRER_PRUEBAS}
+                            Run Analizar con Dependency-Track: ${params.RUN_ANALIZAR_CON_DTRACK}
+                        """
                 }
             }
         }
 
-        stage('Setting up OWASP ZAP docker container') {
+        stage('Build and Start Containers') {
             steps {
-                echo 'Pulling up last OWASP ZAP container --> Start'
-                sh 'docker pull owasp/zap2docker-stable:latest'
-                echo 'Pulling up last VMS container --> End'
-                echo 'Starting container --> Start'
-                sh 'docker run -dt --name owasp owasp/zap2docker-stable /bin/bash '
+                script {
+                    echo 'Building and starting Docker Compose services...'
+                    sh 'docker-compose up -d'  // Levanta todos los contenedores en segundo plano
+                }
             }
         }
 
-        stage('Prepare wrk directory') {
+        
+        stage('Upload BOM') {
+            steps {
+                script {
+                    def bomFile = '/data/bom.xml'
+                    def apiUrl = 'http://172.18.0.5:8090/api/v1/bom'
+                    def apiKey = 'SU_CLAVE_API'
+                    def projectId = 'ID_PROYECTO'
+
+                    sh """
+                        curl -X PUT ${apiUrl} \
+                            -H 'Content-Type: multipart/form-data' \
+                            -H 'X-API-Key: ${apiKey}' \
+                            -F 'project=${projectId}' \
+                            -F 'bom=@${bomFile}'
+                    """
+                }
+            }
+        }
+
+
+        stage('Dependency-Track Scan') {
             when {
-                environment name : 'GENERATE_REPORT', value: 'true'
+                expression { params.RUN_ANALIZAR_CON_DTRACK }
             }
             steps {
                 script {
-                    sh '''
-                             docker exec owasp \
-                             mkdir /zap/wrk
-                         '''
+                    echo 'Running Dependency-Track analysis...'
+                    sh """
+
+                    """
                 }
             }
         }
 
-        stage('Scanning target on owasp container') {
-            steps {
-                script {
-                    scan_type = "${params.SCAN_TYPE}"
-                    echo "----> scan_type: $scan_type"
-                    target = "${params.TARGET}"
-                    if (scan_type == 'Baseline') {
-                        sh """
-                             docker exec owasp \
-                             zap-baseline.py \
-                             -t $target \
-                             -r report.html \
-                             -I
-                         """
-                    }
-                     else if (scan_type == 'APIS') {
-                        sh """
-                             docker exec owasp \
-                             zap-api-scan.py \
-                             -t $target \
-                             -r report.html \
-                             -I
-                         """
-                     }
-                     else if (scan_type == 'Full') {
-                        sh """
-                             docker exec owasp \
-                             zap-full-scan.py \
-                             -t $target \
-                             -r report.html \
-                             -I
-                         """
-                     }
-                     else {
-                        echo 'Something went wrong...'
-                     }
-                }
+        stage('Generate PDF with Pandoc') {
+            when {
+                expression { params.GENERAR_INFORME_PDF }
             }
-        }
-        stage('Copy Report to Workspace') {
             steps {
                 script {
+                    echo 'Generating PDF with Pandoc...'
                     sh '''
-                         docker cp owasp:/zap/wrk/report.html ${WORKSPACE}/report.html
-                     '''
+                        docker-compose run --rm pandoc pandoc /app/docs/README.md -o /app/docs/README.pdf
+                    '''
+                    sh '''
+                        cp /app/docs/README.pdf ${WORKSPACE}/README.pdf
+                    '''
                 }
             }
         }
-        stage('Email Report'){
-            steps{
+        
+        stage('Email Report') {
+            when {
+                expression { params.GENERAR_INFORME_PDF }
+            }
+            steps {
                 emailext (
-                attachLog: true,
-                attachmentsPattern: '**/*.html',
-                body: "Please find the attached report for the latest OWASP ZAP Scan.",
-                recipientProviders: [buildUser()],
-                subject: "OWASP ZAP Report",
-                to: 'metorresg@miumg.edu.gt'
+                    attachLog: true,
+                    attachmentsPattern: '**/*.pdf',
+                    body: "Please find the attached PDF report for the latest Dependency-Track Scan.",
+                    recipientProviders: [buildUser()],
+                    subject: "Dependency-Track PDF Report",
+                    to: 'mtorresg@miumg.edu.gt'
                 )
             }
         }
     }
+
     post {
         always {
-            echo 'Removing container'
-            sh '''
-                     docker stop owasp
-                     docker rm owasp
-                 '''
+            echo 'Stopping and removing Docker Compose services...'
+            sh 'docker-compose down'  // Detiene y elimina todos los contenedores, redes y volúmenes
             cleanWs()
         }
     }
- }
+}
