@@ -21,8 +21,6 @@ builder.Services.AddDbContext<GastoDbContext>(options =>
 // Registrar el servicio GastoService
 builder.Services.AddScoped<GastoService>();
 
-// Configurar HttpClient
-builder.Services.AddHttpClient();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 
