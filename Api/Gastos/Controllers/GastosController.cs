@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Gastos.Models;
 using Gastos.Services;
 using System.Collections.Generic; // Necesario para IEnumerable<>
+using Microsoft.Extensions.Configuration;
+
 
 
 namespace Gastos.Controllers

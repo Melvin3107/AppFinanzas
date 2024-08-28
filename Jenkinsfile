@@ -39,27 +39,7 @@ pipeline {
             }
         }
 
-        
-        stage('Upload BOM') {
-            steps {
-                script {
-                    def bomFile = '/data/bom.xml'
-                    def apiUrl = 'http://172.18.0.5:8090/api/v1/bom'
-                    def apiKey = 'SU_CLAVE_API'
-                    def projectId = 'ID_PROYECTO'
-
-                    sh """
-                        curl -X PUT ${apiUrl} \
-                            -H 'Content-Type: multipart/form-data' \
-                            -H 'X-API-Key: ${apiKey}' \
-                            -F 'project=${projectId}' \
-                            -F 'bom=@${bomFile}'
-                    """
-                }
-            }
-        }
-
-
+                
         stage('Dependency-Track Scan') {
             when {
                 expression { params.RUN_ANALIZAR_CON_DTRACK }
