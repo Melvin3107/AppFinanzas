@@ -68,7 +68,6 @@ services:
   owasp:
     image: dependencytrack/apiserver
     container_name: owasp
-    privileged: true
     ports:
       - "8090:8090"
     volumes:
@@ -90,10 +89,10 @@ services:
 
     
   pandoc:
-    image: pandoc/latex:latest  # Imagen de Pandoc con soporte para LaTeX
+    image: pandoc/latex  # Imagen de Pandoc con soporte para LaTeX
     container_name: pandoc
     volumes:
-      - .:/app  # Montar el directorio actual en /app dentro del contenedor
+      - .docs:/app/docs  # Montar el directorio actual en /app dentro del contenedor
     entrypoint: ["sh", "-c"]
     command: >
       "apt-get update &&
