@@ -84,19 +84,7 @@ services:
           memory: 16G
           cpus: '2'
     networks:
-      - app-network
-
-
-  dependency-track-cli:
-    image: dependencytrack/cli
-    container_name: dependency-track-cli
-    entrypoint: ["/bin/sh", "-c"]
-    command: "dependency-track-cli --url http://owasp:8090 --api-key YOUR_API_KEY --project-name my-project --version 1.0.0 --bom /data/bom.xml"
-    volumes:
-      - ./data:/data
-    networks:
-      - app-network      
-
+      - app-network     
     
   pandoc:
     image: pandoc/latex  # Imagen de Pandoc con soporte para LaTeX
