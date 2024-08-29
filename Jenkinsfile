@@ -59,7 +59,7 @@ pipeline {
                    echo 'Testing Docker Command...'
                    sh 'docker run --rm -v D:/AppFinanzas/frontend:/data alpine:latest ls -l /data'
                 }          
-}
+
             }
         }
 
