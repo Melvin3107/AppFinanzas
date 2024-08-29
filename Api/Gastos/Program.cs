@@ -6,10 +6,6 @@ using Gastos.Data;
 using Microsoft.Extensions.Configuration;
 using Gastos.Services;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
-using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 
 var builder = WebApplication.CreateBuilder(args);

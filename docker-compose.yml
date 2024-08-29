@@ -58,13 +58,6 @@ services:
     networks:
       - app-network
 
-  jenkins:
-    image: jenkins/jenkins:lts
-    volumes:
-      - ./data:/data
-    networks:
-      - app-network
-
   owasp:
     image: owasp/dependency-track
     container_name: owasp
