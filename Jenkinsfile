@@ -56,9 +56,17 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'Running Dependency-Track analysis...'
-                    sh 'docker run --rm -v D:/AppFinanzas/frontend:/data alpine:latest sh -c "apk add --no-cache curl jq && ls -l /data/${params.BOM_FILE} && curl -X POST ${params.DTRACK_URL}/api/v1/project/${params.PROJECT_NAME}/version/${params.VERSION}/bom -H \'Authorization: Bearer ${params.DTRACK_API_KEY}\' -F \'file=@/data/${params.BOM_FILE}\' | jq ."'
-                }
+                    echo 'Running Dependency-Track Analysis...'
+                    sh '''
+                    docker run --rm -v D:/AppFinanzas/frontend:/data alpine:latest sh -c "
+                        apk add --no-cache curl jq && \
+                        ls -l /data/${params.BOM_FILE} && \
+                        curl -X POST ${params.DTRACK_URL}/api/v1/project/${params.PROJECT_NAME}/version/${params.VERSION}/bom \
+                        -H 'Authorization: Bearer ${params.DTRACK_API_KEY}' \
+                        -F 'file=@/data/${params.BOM_FILE}' | jq .
+                    "
+                    '''
+}
             }
         }
 
