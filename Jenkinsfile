@@ -58,11 +58,18 @@ pipeline {
                 script {
                     echo 'Starting Dependency-Track scan...'
 
-                    // Primero, asegúrate de que Dependency-Track esté corriendo
+                    // Levanta el contenedor Dependency-Track
                     sh 'docker-compose up -d dependencytrack'
 
+                    // Espera un tiempo para que Dependency-Track esté completamente operativo
+                    sleep(time: 30, unit: 'SECONDS')
+
                     // Verifica que Dependency-Track esté accesible
-                    sh 'curl --silent --fail http://localhost:8061/api/v1/ping'
+                    def statusCode = sh(script: 'curl --write-out "%{http_code}" --silent --output /dev/null http://localhost:8061/api/v1/ping', returnStdout: true).trim()
+            
+                    if (statusCode != '200') {
+                        error "Dependency-Track is not accessible. HTTP Status Code: ${statusCode}"
+                    }
 
                     // Ejecuta el comando de análisis usando Dependency-Track
                     sh '''
