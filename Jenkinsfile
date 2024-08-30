@@ -44,9 +44,9 @@ pipeline {
                     sh '''
                         curl -X POST \
                           -H "Content-Type: application/xml" \
-                          -H "Authorization: Bearer odt_dUKx4LoQ2LKbJEyvqdQuuTSHqvDCWwRy" \
+                          -H "Authorization: Bearer odt_ynam8X200cm1LaVUoSqdCCaS3BBhaHn9" \
                           --data-binary @/app/bom.xml \
-                          http://localhost:8061/api/v1/bom
+                          http://localhost:8080/api/v1/bom
                     '''
                 }
             }
