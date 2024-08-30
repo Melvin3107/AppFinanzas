@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cyclonedx.org/schema/bom/1.4 http://cyclonedx.org/schema/bom/1.4/bom-1.4.xsd">
+  <metadata>
+    <timestamp>2024-08-28T12:00:00Z</timestamp>
+    <tool>
+      <name>Manual BOM Generator</name>
+      <version>1.0</version>
+    </tool>
+  </metadata>
+  <components>
+    <component type="library">
+      <name>frontend-package</name>
+      <version>1.0.0</version>
+      <bom-ref>pkg:maven/frontend-package@1.0.0</bom-ref>
+    </component>
+    <!-- Agrega más componentes aquí -->
+  </components>
+</bom>
+
