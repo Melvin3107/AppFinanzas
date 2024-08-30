@@ -58,11 +58,11 @@ pipeline {
                     //sleep(time: 30, unit: 'SECONDS')
 
                     // Verifica que Dependency-Track esté accesible
-                    def statusCode = sh(script: "curl --write-out '%{http_code}' --silent --output /dev/null ${params.DTRACK_URL}/api/v1/ping", returnStdout: true).trim()
+                    //def statusCode = sh(script: "curl --write-out '%{http_code}' --silent --output /dev/null ${params.DTRACK_URL}/api/v1/ping", returnStdout: true).trim()
             
-                    if (statusCode != '200') {
-                        error "Dependency-Track is not accessible. HTTP Status Code: ${statusCode}"
-                    }
+                    //if (statusCode != '200') {
+                    //    error "Dependency-Track is not accessible. HTTP Status Code: ${statusCode}"
+                    //}
 
                     // Ejecuta el comando de análisis usando Dependency-Track
                     sh '''
