@@ -11,7 +11,7 @@ pipeline {
         booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
         booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
 
-        string(name: 'DTRACK_URL', defaultValue: 'http://localhost:8090', description: 'URL del servidor Dependency-Track')
+        string(name: 'DTRACK_URL', defaultValue: 'http://localhost:8080', description: 'URL del servidor Dependency-Track')
         string(name: 'DTRACK_API_KEY', defaultValue: '', description: 'odt_YhogQl3jl4YwGYnov8KEKXHniXKChxZd')
         string(name: 'PROJECT_NAME', defaultValue: 'my-project', description: 'Automatizacion')
         string(name: 'VERSION', defaultValue: '1.0.0', description: 'Versión del proyecto')
@@ -74,7 +74,7 @@ pipeline {
                     // Ejecuta el comando de análisis usando Dependency-Track
                     sh '''
                         docker run --rm \
-                        -e DTRACK_URL=http://localhost:8090 \
+                        -e DTRACK_URL=http://localhost:8080 \
                         -e DTRACK_API_KEY=${params.DTRACK_API_KEY} \
                         -e PROJECT_NAME=${params.PROJECT_NAME} \
                         -e VERSION=${params.VERSION} \
