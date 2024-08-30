@@ -9,8 +9,8 @@ pipeline {
         booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
         booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
         string(name: 'DTRACK_URL', defaultValue: 'http://localhost:8061', description: 'URL del servidor Dependency-Track')
-        string(name: 'DTRACK_API_KEY', defaultValue: '', description: 'API Key para Dependency-Track')
-        string(name: 'PROJECT_NAME', defaultValue: 'my-project', description: 'Nombre del proyecto')
+        string(name: 'DTRACK_API_KEY', defaultValue: 'odt_dUKx4LoQ2LKbJEyvqdQuuTSHqvDCWwRy', description: 'API Key para Dependency-Track')
+        string(name: 'PROJECT_NAME', defaultValue: 'Automatizacion', description: 'Nombre del proyecto')
         string(name: 'VERSION', defaultValue: '1.0.0', description: 'Versión del proyecto')
         string(name: 'BOM_FILE', defaultValue: 'bom.xml', description: 'Nombre del archivo BOM (Bill of Materials)')
     }
