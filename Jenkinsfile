@@ -42,16 +42,11 @@ pipeline {
                 script {
                     echo 'Iniciando escaneo con Dependency-Track...'
                     sh '''
-                        docker run --rm \
-                        -e DTRACK_URL=http://localhost:8061 \
-                        -e DTRACK_API_KEY=odt_dUKx4LoQ2LKbJEyvqdQuuTSHqvDCWwRy \
-                        -v /d/AppFinanzas/bom.xml:/app/bom.xml \
-                        dependencytrack/bundled:latest \
-                        -url $DTRACK_URL \
-                        -apiKey $DTRACK_API_KEY \
-                        -project "AppFinanzas" \
-                        -version "1.0.0" \
-                        -bom /app/bom.xml
+                        curl -X POST \
+                          -H "Content-Type: application/xml" \
+                          -H "Authorization: Bearer odt_dUKx4LoQ2LKbJEyvqdQuuTSHqvDCWwRy" \
+                          --data-binary @/app/bom.xml \
+                          http://localhost:8061/api/v1/bom
                     '''
                 }
             }
