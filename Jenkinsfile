@@ -46,7 +46,7 @@ pipeline {
                         -e DTRACK_URL=http://localhost:8061 \
                         -e DTRACK_API_KEY=odt_dUKx4LoQ2LKbJEyvqdQuuTSHqvDCWwRy \
                         -v ${WORKSPACE}/bom.xml:/app/bom.xml \
-                        dependencytrack/cli:latest \
+                        dependencytrack/bundled:latest \
                         -url $DTRACK_URL \
                         -apiKey $DTRACK_API_KEY \
                         -project "SimpleProject" \
