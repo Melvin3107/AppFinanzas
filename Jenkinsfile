@@ -49,7 +49,7 @@ pipeline {
                         dependencytrack/bundled:latest \
                         -url $DTRACK_URL \
                         -apiKey $DTRACK_API_KEY \
-                        -project "SimpleProject" \
+                        -project "AppFinanzas" \
                         -version "1.0.0" \
                         -bom /app/bom.xml
                     '''
