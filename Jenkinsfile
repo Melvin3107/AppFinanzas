@@ -55,7 +55,7 @@ pipeline {
                     echo 'Starting Dependency-Track scan...'
 
                     // Espera un tiempo para que Dependency-Track esté completamente operativo
-                    sleep(time: 30, unit: 'SECONDS')
+                    //sleep(time: 30, unit: 'SECONDS')
 
                     // Verifica que Dependency-Track esté accesible
                     def statusCode = sh(script: "curl --write-out '%{http_code}' --silent --output /dev/null ${params.DTRACK_URL}/api/v1/ping", returnStdout: true).trim()
