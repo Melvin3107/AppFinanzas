@@ -11,9 +11,9 @@ pipeline {
         booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
         booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
 
-        string(name: 'DTRACK_URL', defaultValue: 'http://localhost:8090', description: 'URL del servidor Dependency-Track')
-        string(name: 'DTRACK_API_KEY', defaultValue: '', description: 'Clave API para Dependency-Track')
-        string(name: 'PROJECT_NAME', defaultValue: 'my-project', description: 'Nombre del proyecto')
+        string(name: 'DTRACK_URL', defaultValue: 'http://localhost:8061', description: 'URL del servidor Dependency-Track')
+        string(name: 'DTRACK_API_KEY', defaultValue: '', description: 'odt_YhogQl3jl4YwGYnov8KEKXHniXKChxZd')
+        string(name: 'PROJECT_NAME', defaultValue: 'my-project', description: 'Automatizacion')
         string(name: 'VERSION', defaultValue: '1.0.0', description: 'Versión del proyecto')
         string(name: 'BOM_FILE', defaultValue: 'bom.xml', description: 'Nombre del archivo BOM (Bill of Materials)')
     }
@@ -56,10 +56,30 @@ pipeline {
             }
             steps {
                 script {
-                   echo 'Testing Docker Command...'
-                   sh 'docker run --rm -v D:/AppFinanzas/frontend:/data alpine:latest ls -l /data'
-                }          
+                    echo 'Starting Dependency-Track scan...'
 
+                    // Primero, asegúrate de que Dependency-Track esté corriendo
+                    sh 'docker-compose up -d dependencytrack'
+
+                    // Verifica que Dependency-Track esté accesible
+                    sh 'curl --silent --fail http://localhost:8061/api/v1/ping'
+
+                    // Ejecuta el comando de análisis usando Dependency-Track
+                    sh '''
+                        docker run --rm \
+                        -e DTRACK_URL=http://localhost:8061 \
+                        -e DTRACK_API_KEY=${params.DTRACK_API_KEY} \
+                        -e PROJECT_NAME=${params.PROJECT_NAME} \
+                        -e VERSION=${params.VERSION} \
+                        -v ${WORKSPACE}/${params.BOM_FILE}:/app/bom.xml \
+                        dependencytrack/cli:latest \
+                        -url $DTRACK_URL \
+                        -apiKey $DTRACK_API_KEY \
+                        -project $PROJECT_NAME \
+                        -version $VERSION \
+                        -bom /app/bom.xml
+                    '''
+                }          
             }
         }
 
