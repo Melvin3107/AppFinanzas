@@ -22,6 +22,8 @@ else
 
 // Configurar el puerto en el que la aplicación escuchará
 app.Urls.Add("http://*:8585");
+// Configurar el puerto de escucha
+
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
