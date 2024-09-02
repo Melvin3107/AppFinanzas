@@ -11,59 +11,28 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Restore') {
+        stage('Build with Docker Compose') {
             steps {
-                // Restaurar paquetes para todos los microservicios
-                dir('Api/Usuarios') {
-                    sh 'dotnet restore'
-                }
-                dir('Api/Gastos') {
-                    sh 'dotnet restore'
-                }
-                dir('frontend') {
-                    sh 'dotnet restore'
+                script {
+                    // Ejecutar docker-compose para construir los servicios
+                    sh 'docker-compose build'
                 }
             }
         }
-        stage('Build') {
+        stage('Run Tests and Publish') {
             steps {
-                // Construir todos los microservicios
-                dir('Api/Usuarios') {
-                    sh 'dotnet build --configuration Release'
-                }
-                dir('Api/Gastos') {
-                    sh 'dotnet build --configuration Release'
-                }
-                dir('frontend') {
-                    sh 'dotnet build --configuration Release'
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                // Ejecutar pruebas para todos los microservicios
-                dir('Api/Usuarios') {
-                    sh 'dotnet test --configuration Release'
-                }
-                dir('Api/Gastos') {
-                    sh 'dotnet test --configuration Release'
-                }
-                dir('frontend') {
-                    sh 'dotnet test --configuration Release'
-                }
-            }
-        }
-        stage('Publish') {
-            steps {
-                // Publicar todos los microservicios
-                dir('Api/Usuarios') {
-                    sh 'dotnet publish --configuration Release --output ./publish/Usuarios'
-                }
-                dir('Api/Gastos') {
-                    sh 'dotnet publish --configuration Release --output ./publish/Gastos'
-                }
-                dir('frontend') {
-                    sh 'dotnet publish --configuration Release --output ./publish/frontend'
+                script {
+                    // Ejecutar docker-compose para levantar los servicios
+                    sh 'docker-compose up -d'
+
+                    // Ejecutar las pruebas en los contenedores
+                    sh 'docker-compose exec -T <service_name> dotnet test --configuration Release'
+
+                    // Publicar los artefactos desde el contenedor
+                    sh 'docker-compose exec -T <service_name> dotnet publish --configuration Release --output /app/publish'
+                    
+                    // Copiar el archivo publicado desde el contenedor al sistema de archivos del host
+                    sh 'docker cp <container_id>:/app/publish ./publish'
                 }
             }
         }
@@ -71,11 +40,13 @@ pipeline {
     post {
         success {
             echo 'Pipeline completado con éxito.'
+            archiveArtifacts artifacts: 'publish/**/*', allowEmptyArchive: true
         }
         failure {
             echo 'Pipeline falló.'
         }
     }
 }
+
 
 
