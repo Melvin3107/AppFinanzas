@@ -1,31 +1,55 @@
 pipeline {
     agent any
-
+    environment {
+        DOTNET_CLI_TELEMETRY_OPTOUT = '1'  // Desactiva la telemetría de .NET CLI
+        DOTNET_NOLOGO = 'true'             // Desactiva el logotipo de .NET CLI
+    }
     stages {
         stage('Checkout') {
             steps {
                 // Clonar el repositorio
-                git branch: 'main', url: 'https://github.com/Melvin3107/AppFinanzas.git'
+                checkout scm
             }
         }
-
-        stage('Generate BOM File') {
+        stage('Restore') {
             steps {
+                // Restaurar paquetes
                 script {
-                    // Aquí puedes ejecutar comandos para generar el archivo bom.xml si es necesario.
-                    // Por ejemplo, si estás utilizando un proyecto .NET y tienes un comando para generar el BOM:
-                    sh 'dotnet tool install -g dotnet-bom'
-                    sh 'dotnet bom generate --output /path/to/desired/location/bom.xml'
+                    bat 'dotnet restore'
                 }
             }
         }
-
-        stage('Archive BOM File') {
+        stage('Build') {
             steps {
-                // Archivar el archivo para que esté disponible para otros pipelines o tareas
-                archiveArtifacts artifacts: '/path/to/desired/location/bom.xml', allowEmptyArchive: true
+                // Construir la aplicación
+                script {
+                    bat 'dotnet build --configuration Release'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                // Ejecutar pruebas
+                script {
+                    bat 'dotnet test --configuration Release'
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                // Publicar la aplicación
+                script {
+                    bat 'dotnet publish --configuration Release --output ./publish'
+                }
             }
         }
     }
+    post {
+        success {
+            echo 'Pipeline completado con éxito.'
+        }
+        failure {
+            echo 'Pipeline falló.'
+        }
+    }
 }
-
