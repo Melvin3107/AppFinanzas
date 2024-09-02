@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Melvin3107/AppFinanzas.git'
+                git branch: 'main', url: 'https://github.com/Melvin3107/AppFinanzas.git'
             }
         }
         stage('Build') {
@@ -23,10 +23,8 @@ pipeline {
             steps {
                 script {
                     dir('AppFinanzas') {
-                        // Asegúrate de que CycloneDX esté instalado y configurado
-                        // Genera el BOM usando CycloneDX para todos los proyectos .NET
+                        // Genera el BOM en formato XML
                         sh '''
-                        # Genera el BOM en formato XML para todos los proyectos .NET
                         dotnet cyclonedx --output bom.xml
                         '''
                     }
