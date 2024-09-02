@@ -24,9 +24,7 @@ pipeline {
                 script {
                     dir('AppFinanzas') {
                         // Genera el BOM en formato XML
-                        sh '''
-                        dotnet cyclonedx --output bom.xml
-                        '''
+                        sh 'dotnet cyclonedx --output bom.xml'
                     }
                 }
             }
@@ -36,7 +34,7 @@ pipeline {
     post {
         always {
             // Archiva los artefactos de compilación
-            archiveArtifacts artifacts: '**/bin/Release/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'AppFinanzas/**/bin/Release/**', allowEmptyArchive: true
             // Archiva el BOM generado
             archiveArtifacts artifacts: 'AppFinanzas/bom.xml', allowEmptyArchive: true
         }
