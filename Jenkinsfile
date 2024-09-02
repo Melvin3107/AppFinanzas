@@ -1,69 +1,75 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_CLI_EXPERIMENTAL = 'enabled'
+    parameters {
+        choice choices: ['Baseline', 'APIS', 'Full'], description: 'Type of scan that is going to perform inside the container', name: 'SCAN_TYPE'
+        
+        booleanParam(name: 'RUN_PROBAR_APLICACION', defaultValue: true, description: 'Probar aplicación')
+        booleanParam(name: 'RUN_CORRER_PRUEBAS', defaultValue: true, description: 'Correr pruebas')
+
+        booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
+        booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Clona el repositorio
-                git branch: 'main', url: 'https://github.com/Melvin3107/AppFinanzas.git'
-            }
-        }
-
-        stage('Build and Push Docker Images') {
+        stage('Pipeline Info') {
             steps {
                 script {
-                    // Construye las imágenes Docker usando Docker Compose
-                    sh 'docker-compose -f docker-compose.yml build'
+                    echo '<--Parameter Initialization-->'
+                    echo """
+                        The current parameters are:
+                            Scan Type: ${params.SCAN_TYPE}
+                            Generate Report: ${params.GENERATE_REPORT}
+                            Generate PDF Report: ${params.GENERAR_INFORME_PDF}
+                            Run Probar Aplicación: ${params.RUN_PROBAR_APLICACION}
+                            Run Correr Pruebas: ${params.RUN_CORRER_PRUEBAS}
+                        """
                 }
             }
         }
 
-        stage('Run Tests') {
+        stage('Build and Start Containers') {
             steps {
                 script {
-                    // Levanta los servicios en segundo plano
-                    sh 'docker-compose -f docker-compose.yml up -d'
-
-                    // Espera a que los servicios estén listos (ajusta el tiempo según sea necesario)
-                    sleep(time: 30, unit: 'SECONDS')
-
-                    // Ejecuta las pruebas dentro del contenedor de pruebas
-                    // Reemplaza 'test-service' con el nombre real de tu servicio de pruebas
-                    sh 'docker-compose -f docker-compose.yml exec -T test-service dotnet test'
-
-                    // Detiene y elimina los contenedores después de las pruebas
-                    sh 'docker-compose -f docker-compose.yml down'
+                    echo 'Building and starting Docker Compose services...'
+                    sh 'docker-compose up -d'  // Levanta todos los contenedores en segundo plano
                 }
             }
         }
 
-        stage('Publish') {
+        stage('Run Application Tests') {
+            when {
+                expression { params.RUN_CORRER_PRUEBAS }
+            }
             steps {
                 script {
-                    // Publica los servicios, si es necesario
-                    sh 'docker-compose -f docker-compose.yml exec -T app-service dotnet publish --configuration Release --output /app/publish'
+                    echo 'Running tests in Docker Compose...'
+                    // Ejecuta las pruebas en el contenedor de pruebas
+                    sh 'docker-compose exec -T test-container-name dotnet test'
                 }
             }
         }
 
-        stage('Archive') {
+        stage('Generate Report') {
+            when {
+                expression { params.GENERATE_REPORT }
+            }
             steps {
-                // Archiva los artefactos de la compilación
-                sh 'docker cp $(docker ps -q -f name=app-service):/app/publish ./publish'
-                archiveArtifacts artifacts: 'publish/**', allowEmptyArchive: true
+                script {
+                    echo 'Generating report...'
+                    // Agrega comandos para generar tu documento aquí
+                    // Ejemplo: crear un archivo de texto
+                    sh 'echo "This is a sample report" > report.txt'
+                }
             }
         }
 
-        stage('Cleanup') {
+        stage('Archive Artifacts') {
             steps {
                 script {
-                    // Limpia los servicios y las imágenes
-                    sh 'docker-compose -f docker-compose.yml down'
-                    sh 'docker system prune -af'
+                    echo 'Archiving generated files...'
+                    // Archiva el archivo generado para que esté disponible para otros pipelines
+                    archiveArtifacts artifacts: 'report.txt', allowEmptyArchive: true
                 }
             }
         }
@@ -71,7 +77,8 @@ pipeline {
 
     post {
         always {
-            // Limpieza después de la construcción
+            echo 'Stopping and removing Docker Compose services...'
+            sh 'docker-compose down'  // Detiene y elimina todos los contenedores, redes y volúmenes
             cleanWs()
         }
     }
