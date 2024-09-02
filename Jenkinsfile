@@ -14,33 +14,25 @@ pipeline {
         stage('Restore') {
             steps {
                 // Restaurar paquetes
-                script {
-                    bat 'dotnet restore'
-                }
+                sh 'dotnet restore'
             }
         }
         stage('Build') {
             steps {
                 // Construir la aplicación
-                script {
-                    bat 'dotnet build --configuration Release'
-                }
+                sh 'dotnet build --configuration Release'
             }
         }
         stage('Test') {
             steps {
                 // Ejecutar pruebas
-                script {
-                    bat 'dotnet test --configuration Release'
-                }
+                sh 'dotnet test --configuration Release'
             }
         }
         stage('Publish') {
             steps {
                 // Publicar la aplicación
-                script {
-                    bat 'dotnet publish --configuration Release --output ./publish'
-                }
+                sh 'dotnet publish --configuration Release --output ./publish'
             }
         }
     }
