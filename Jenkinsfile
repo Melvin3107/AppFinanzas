@@ -3,6 +3,7 @@ pipeline {
     environment {
         DOTNET_CLI_TELEMETRY_OPTOUT = '1'  // Desactiva la telemetría de .NET CLI
         DOTNET_NOLOGO = 'true'             // Desactiva el logotipo de .NET CLI
+        BOURNE_SHELL_DEBUG = 'true'        // Habilita el diagnóstico de Bourne Shell
     }
     stages {
         stage('Checkout') {
@@ -45,3 +46,4 @@ pipeline {
         }
     }
 }
+
