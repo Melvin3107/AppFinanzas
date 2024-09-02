@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clonar el repositorio
-                git 'https://github.com/Melvin3107/AppFinanzas.git'
+                git branch: 'main', url: 'https://github.com/Melvin3107/AppFinanzas.git'
             }
         }
 
