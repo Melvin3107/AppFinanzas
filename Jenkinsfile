@@ -9,13 +9,12 @@ pipeline {
             }
         }
 
-        stage('Verify Files') {
+        stage('Verify Directory Structure') {
             steps {
                 script {
-                    // Verifica que los archivos estén presentes
-                    dir('AppFinanzas') {
-                        sh 'ls -R'
-                    }
+                    // Verifica la estructura del directorio
+                    sh 'echo "Directory structure:"'
+                    sh 'ls -R'
                 }
             }
         }
@@ -24,6 +23,18 @@ pipeline {
             steps {
                 // Verifica la versión del .NET SDK
                 sh 'dotnet --version'
+            }
+        }
+
+        stage('Verify Project Files') {
+            steps {
+                script {
+                    // Verifica que los archivos de proyecto estén presentes
+                    dir('AppFinanzas') {
+                        sh 'echo "Verifying project files:"'
+                        sh 'ls -R'
+                    }
+                }
             }
         }
 
@@ -76,3 +87,4 @@ pipeline {
         }
     }
 }
+
