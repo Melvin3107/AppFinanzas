@@ -7,18 +7,18 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Melvin3107/AppFinanzas.git'
             }
         }
+        
         stage('Build') {
             steps {
                 script {
-                    dir('AppFinanzas') {
-                        // Compila los proyectos .NET
-                        sh 'dotnet build -c Release Api/Usuarios/Usuarios.csproj'
-                        sh 'dotnet build -c Release Api/Gastos/Gastos.csproj'
-                        sh 'dotnet build -c Release frontend/frontend.csproj'
-                    }
+                    // Compila los proyectos .NET en las ubicaciones especificadas
+                    sh 'dotnet build -c Release AppFinanzas/Api/Usuarios/Usuarios.csproj'
+                    sh 'dotnet build -c Release AppFinanzas/Api/Gastos/Gastos.csproj'
+                    sh 'dotnet build -c Release AppFinanzas/frontend/frontend.csproj'
                 }
             }
         }
+        
         stage('Generate BOM') {
             steps {
                 script {
