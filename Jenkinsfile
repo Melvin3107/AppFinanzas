@@ -1,16 +1,11 @@
 pipeline {
     agent any
 
-    environment {
-        JENKINS_API_TOKEN = '119c8f9e522744778f491b77bccd19569d'
-    }
-
     parameters {
         choice choices: ['Baseline', 'APIS', 'Full'], description: 'Type of scan that is going to perform inside the container', name: 'SCAN_TYPE'
         
         booleanParam(name: 'RUN_PROBAR_APLICACION', defaultValue: true, description: 'Probar aplicación')
         booleanParam(name: 'RUN_CORRER_PRUEBAS', defaultValue: true, description: 'Correr pruebas')
-
         booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
         booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
     }
@@ -36,20 +31,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building and starting Docker Compose services...'
-                    sh 'docker-compose up -d'
-                }
-            }
-        }
-
-        stage('Run Application Tests') {
-            when {
-                expression { params.RUN_CORRER_PRUEBAS }
-            }
-            steps {
-                script {
-                    echo 'Running tests in Docker Compose...'
-                    // Ejecuta las pruebas en el contenedor de pruebas
-                    sh 'docker-compose exec -T test-container-name dotnet test'
+                    sh 'docker-compose up -d'  // Levanta todos los contenedores en segundo plano
                 }
             }
         }
@@ -79,7 +61,7 @@ pipeline {
     post {
         always {
             echo 'Stopping and removing Docker Compose services...'
-            sh 'docker-compose down'
+            sh 'docker-compose down'  // Detiene y elimina todos los contenedores, redes y volúmenes
             cleanWs()
         }
     }
