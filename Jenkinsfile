@@ -1,19 +1,19 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Checkout') {
             steps {
-                // Clona el repositorio desde GitHub
+                // Clona el repositorio de Git
                 git 'https://github.com/Melvin3107/AppFinanzas.git'
             }
         }
         stage('Build') {
             steps {
                 script {
-                    // Cambia al directorio principal de tu aplicación
+                    // Cambia al directorio raíz del proyecto
                     dir('AppFinanzas') {
-                        // Compila los proyectos .NET en Release
+                        // Compila los proyectos .NET
                         sh 'dotnet build -c Release Api/Usuarios/Usuarios.csproj'
                         sh 'dotnet build -c Release Api/Gastos/Gastos.csproj'
                         sh 'dotnet build -c Release frontend/frontend.csproj'
@@ -22,11 +22,11 @@ pipeline {
             }
         }
     }
-
+    
     post {
         always {
-            // Archiva los artefactos de compilación
-            archiveArtifacts artifacts: '**/bin/Release/**', allowEmptyArchive: true
+            // Archiva los artefactos construidos, ajusta los patrones de acuerdo a tus necesidades
+            archiveArtifacts artifacts: '**/bin/Release/**/*', allowEmptyArchive: true
         }
     }
 }
