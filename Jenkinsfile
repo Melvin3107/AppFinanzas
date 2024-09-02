@@ -9,6 +9,24 @@ pipeline {
             }
         }
 
+        stage('Verify Files') {
+            steps {
+                script {
+                    // Verifica que los archivos estén presentes
+                    dir('AppFinanzas') {
+                        sh 'ls -R'
+                    }
+                }
+            }
+        }
+
+        stage('Check .NET SDK') {
+            steps {
+                // Verifica la versión del .NET SDK
+                sh 'dotnet --version'
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
@@ -58,4 +76,3 @@ pipeline {
         }
     }
 }
-
