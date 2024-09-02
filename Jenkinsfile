@@ -4,89 +4,27 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clona el repositorio desde GitHub
-                git url: 'https://github.com/Melvin3107/AppFinanzas.git', branch: 'main'
+                // Clonar el repositorio
+                git 'https://github.com/Melvin3107/AppFinanzas.git'
             }
         }
 
-        stage('Set Permissions') {
+        stage('Generate BOM File') {
             steps {
                 script {
-                    // Otorga permisos de lectura y escritura a los archivos y directorios necesarios
-                    sh 'chmod -R u+rwX AppFinanzas'
+                    // Aquí puedes ejecutar comandos para generar el archivo bom.xml si es necesario.
+                    // Por ejemplo, si estás utilizando un proyecto .NET y tienes un comando para generar el BOM:
+                    sh 'dotnet tool install -g dotnet-bom'
+                    sh 'dotnet bom generate --output /path/to/desired/location/bom.xml'
                 }
             }
         }
 
-        stage('Verify Directory') {
+        stage('Archive BOM File') {
             steps {
-                script {
-                    // Verifica el directorio actual y la estructura de archivos
-                    sh 'echo "Current directory:"'
-                    sh 'pwd'
-                    sh 'echo "Directory structure:"'
-                    sh 'ls -R'
-                }
+                // Archivar el archivo para que esté disponible para otros pipelines o tareas
+                archiveArtifacts artifacts: '/path/to/desired/location/bom.xml', allowEmptyArchive: true
             }
-        }
-
-        stage('Check .NET SDK') {
-            steps {
-                // Verifica la versión del .NET SDK
-                sh 'dotnet --version'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                script {
-                    // Cambia al directorio principal de la aplicación
-                    dir('AppFinanzas') {
-                        // Verifica la estructura de directorios en AppFinanzas
-                        sh 'echo "Directory structure in AppFinanzas:"'
-                        sh 'ls -R'
-
-                        // Compila los proyectos .NET
-                        sh 'dotnet build -c Release Api/Gastos/Gastos.csproj'
-                        sh 'dotnet build -c Release Api/Usuarios/Usuarios.csproj'
-                        sh 'dotnet build -c Release frontend/frontend.csproj'
-                    }
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    // Ejecuta pruebas unitarias si tienes pruebas configuradas
-                    dir('AppFinanzas') {
-                        sh 'dotnet test Api/Gastos/Gastos.csproj'
-                        sh 'dotnet test Api/Usuarios/Usuarios.csproj'
-                        sh 'dotnet test frontend/frontend.csproj'
-                    }
-                }
-            }
-        }
-
-        stage('Publish') {
-            steps {
-                script {
-                    // Publica los proyectos .NET si es necesario
-                    dir('AppFinanzas') {
-                        sh 'dotnet publish -c Release Api/Gastos/Gastos.csproj -o ./publish/Gastos'
-                        sh 'dotnet publish -c Release Api/Usuarios/Usuarios.csproj -o ./publish/Usuarios'
-                        sh 'dotnet publish -c Release frontend/frontend.csproj -o ./publish/frontend'
-                    }
-                }
-            }
-        }
-    }
-    
-    post {
-        always {
-            // Acciones después de la construcción, como archivar artefactos
-            archiveArtifacts artifacts: 'AppFinanzas/**/bin/Release/**'
-            junit '**/test-results/*.xml'
         }
     }
 }
