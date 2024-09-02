@@ -9,10 +9,21 @@ pipeline {
             }
         }
 
-        stage('Verify Directory Structure') {
+        stage('Set Permissions') {
             steps {
                 script {
-                    // Verifica la estructura del directorio
+                    // Otorga permisos de lectura y escritura a los archivos y directorios necesarios
+                    sh 'chmod -R u+rwX AppFinanzas'
+                }
+            }
+        }
+
+        stage('Verify Directory') {
+            steps {
+                script {
+                    // Verifica el directorio actual y la estructura de archivos
+                    sh 'echo "Current directory:"'
+                    sh 'pwd'
                     sh 'echo "Directory structure:"'
                     sh 'ls -R'
                 }
@@ -26,23 +37,15 @@ pipeline {
             }
         }
 
-        stage('Verify Project Files') {
-            steps {
-                script {
-                    // Verifica que los archivos de proyecto estén presentes
-                    dir('AppFinanzas') {
-                        sh 'echo "Verifying project files:"'
-                        sh 'ls -R'
-                    }
-                }
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
                     // Cambia al directorio principal de la aplicación
                     dir('AppFinanzas') {
+                        // Verifica la estructura de directorios en AppFinanzas
+                        sh 'echo "Directory structure in AppFinanzas:"'
+                        sh 'ls -R'
+
                         // Compila los proyectos .NET
                         sh 'dotnet build -c Release Api/Gastos/Gastos.csproj'
                         sh 'dotnet build -c Release Api/Usuarios/Usuarios.csproj'
