@@ -18,7 +18,7 @@ pipeline {
                 script {
                     // Build the project
                     dir('AppFinanzas') {
-                        bat 'dotnet build -c Release' // Use 'sh' for Unix-based systems
+                        sh 'dotnet build -c Release'
                     }
                 }
             }
@@ -29,8 +29,8 @@ pipeline {
                 script {
                     // Generate BOM file
                     dir('AppFinanzas') {
-                        bat 'dotnet tool restore'
-                        bat 'dotnet tool run dependency-check --project "AppFinanzas" --out ${env.BOM_FILE}' // Adjust command as needed
+                        sh 'dotnet tool restore'
+                        sh 'dotnet tool run dependency-check --project "AppFinanzas" --out ${env.BOM_FILE}' // Ajusta el comando según sea necesario
                     }
                 }
             }
