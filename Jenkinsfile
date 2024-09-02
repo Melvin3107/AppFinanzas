@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     dir('AppFinanzas') {
-                        // Compila los proyectos .NET con rutas relativas
+                        // Compila los proyectos .NET
                         sh 'dotnet build -c Release Api/Usuarios/Usuarios.csproj'
                         sh 'dotnet build -c Release Api/Gastos/Gastos.csproj'
                         sh 'dotnet build -c Release frontend/frontend.csproj'
@@ -21,7 +21,10 @@ pipeline {
         }
         stage('Generate BOM') {
             steps {
-                // Aquí puedes añadir pasos para generar el archivo BOM, si es necesario
+                script {
+                    // Si ya tienes el archivo BOM, este paso puede ser omitido
+                    // Aquí puedes añadir pasos para generar el archivo BOM si es necesario
+                }
             }
         }
     }
