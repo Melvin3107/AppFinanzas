@@ -1,44 +1,82 @@
 pipeline {
     agent any
+
     environment {
-        DOTNET_CLI_TELEMETRY_OPTOUT = '1'
-        DOTNET_NOLOGO = 'true'
+        DOCKER_CLI_EXPERIMENTAL = 'enabled'
     }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                // Clona el repositorio
+                git branch: 'main', url: 'https://github.com/Melvin3107/AppFinanzas.git'
             }
         }
-        stage('Build with Docker Compose') {
+
+        stage('Build and Push Docker Images') {
             steps {
                 script {
-                    sh 'docker-compose --version'
-                    sh 'docker-compose build'
-                    sh 'docker-compose up -d'
+                    // Construye las imágenes Docker usando Docker Compose
+                    sh 'docker-compose -f docker-compose.yml build'
                 }
             }
         }
-        stage('Run Tests and Publish') {
+
+        stage('Run Tests') {
             steps {
                 script {
-                    sh 'docker-compose exec -T <service_name> dotnet test --configuration Release'
-                    sh 'docker-compose exec -T <service_name> dotnet publish --configuration Release --output /app/publish'
-                    sh 'docker cp <container_id>:/app/publish ./publish'
+                    // Levanta los servicios en segundo plano
+                    sh 'docker-compose -f docker-compose.yml up -d'
+
+                    // Espera a que los servicios estén listos (ajusta el tiempo según sea necesario)
+                    sleep(time: 30, unit: 'SECONDS')
+
+                    // Ejecuta las pruebas dentro del contenedor de pruebas
+                    // Reemplaza 'test-service' con el nombre real de tu servicio de pruebas
+                    sh 'docker-compose -f docker-compose.yml exec -T test-service dotnet test'
+
+                    // Detiene y elimina los contenedores después de las pruebas
+                    sh 'docker-compose -f docker-compose.yml down'
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                script {
+                    // Publica los servicios, si es necesario
+                    sh 'docker-compose -f docker-compose.yml exec -T app-service dotnet publish --configuration Release --output /app/publish'
+                }
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                // Archiva los artefactos de la compilación
+                sh 'docker cp $(docker ps -q -f name=app-service):/app/publish ./publish'
+                archiveArtifacts artifacts: 'publish/**', allowEmptyArchive: true
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    // Limpia los servicios y las imágenes
+                    sh 'docker-compose -f docker-compose.yml down'
+                    sh 'docker system prune -af'
                 }
             }
         }
     }
+
     post {
-        success {
-            echo 'Pipeline completado con éxito.'
-            archiveArtifacts artifacts: 'publish/**/*', allowEmptyArchive: true
-        }
-        failure {
-            echo 'Pipeline falló.'
+        always {
+            // Limpieza después de la construcción
+            cleanWs()
         }
     }
 }
+
 
 
 
