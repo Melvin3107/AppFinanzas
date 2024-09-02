@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        JENKINS_API_TOKEN = '119c8f9e522744778f491b77bccd19569d'
+    }
+
     parameters {
         choice choices: ['Baseline', 'APIS', 'Full'], description: 'Type of scan that is going to perform inside the container', name: 'SCAN_TYPE'
         
@@ -32,7 +36,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building and starting Docker Compose services...'
-                    sh 'docker-compose up -d'  // Levanta todos los contenedores en segundo plano
+                    sh 'docker-compose up -d'
                 }
             }
         }
@@ -57,8 +61,6 @@ pipeline {
             steps {
                 script {
                     echo 'Generating report...'
-                    // Agrega comandos para generar tu documento aquí
-                    // Ejemplo: crear un archivo de texto
                     sh 'echo "This is a sample report" > report.txt'
                 }
             }
@@ -68,7 +70,6 @@ pipeline {
             steps {
                 script {
                     echo 'Archiving generated files...'
-                    // Archiva el archivo generado para que esté disponible para otros pipelines
                     archiveArtifacts artifacts: 'report.txt', allowEmptyArchive: true
                 }
             }
@@ -78,13 +79,8 @@ pipeline {
     post {
         always {
             echo 'Stopping and removing Docker Compose services...'
-            sh 'docker-compose down'  // Detiene y elimina todos los contenedores, redes y volúmenes
+            sh 'docker-compose down'
             cleanWs()
         }
     }
 }
-
-
-
-
-
