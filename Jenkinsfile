@@ -1,83 +1,69 @@
 pipeline {
     agent any
 
-    environment {
-        // Habilitar diagnóstico para la ejecución de scripts
-        JENKINS_DURABLETASK_BOURNE_SHELL_LAUNCH_DIAGNOSTICS = 'true'
-    }
-    
     stages {
         stage('Checkout') {
             steps {
-                // Clona el repositorio desde GitHub
+                // Clona el repositorio en el directorio de trabajo
                 git branch: 'main', url: 'https://github.com/Melvin3107/AppFinanzas.git'
+                
+                // Verifica la estructura del directorio de trabajo
+                sh 'ls -R'  // Esto lista todos los archivos y carpetas en el directorio de trabajo
             }
         }
 
         stage('Restore Dependencies') {
             steps {
                 script {
-                    // Restaura los paquetes necesarios para todos los proyectos
+                    echo 'Restoring dependencies for Api/Gastos...'
+                    // Ruta relativa a la raíz del repositorio
                     sh 'dotnet restore AppFinanzas/Api/Gastos/Gastos.csproj'
+                    
+                    echo 'Restoring dependencies for Api/Usuarios...'
+                    // Ruta relativa a la raíz del repositorio
                     sh 'dotnet restore AppFinanzas/Api/Usuarios/Usuarios.csproj'
+                    
+                    echo 'Restoring dependencies for frontend...'
+                    // Ruta relativa a la raíz del repositorio
                     sh 'dotnet restore AppFinanzas/frontend/frontend.csproj'
                 }
             }
         }
 
-        stage('Build Projects') {
+        stage('Build') {
             steps {
                 script {
-                    // Compila los proyectos
-                    sh 'dotnet build AppFinanzas/Api/Gastos/Gastos.csproj --configuration Release'
-                    sh 'dotnet build AppFinanzas/Api/Usuarios/Usuarios.csproj --configuration Release'
-                    sh 'dotnet build AppFinanzas/frontend/frontend.csproj --configuration Release'
-                }
-            }
-        }
-
-        stage('Publish Projects') {
-            steps {
-                script {
-                    // Publica los proyectos y guarda los binarios en una carpeta específica
-                    sh 'dotnet publish AppFinanzas/Api/Gastos/Gastos.csproj --configuration Release --output ./publish/Gastos'
-                    sh 'dotnet publish AppFinanzas/Api/Usuarios/Usuarios.csproj --configuration Release --output ./publish/Usuarios'
-                    sh 'dotnet publish AppFinanzas/frontend/frontend.csproj --configuration Release --output ./publish/frontend'
-                }
-            }
-        }
-
-        stage('Generate Build Summary') {
-            steps {
-                script {
-                    // Crea un archivo de resumen con la información de la compilación
-                    writeFile file: 'build_summary.txt', text: """
-                        Build Summary:
-                        ========================
-                        - Date: ${new Date()}
-                        - Projects Compiled:
-                          - AppFinanzas/Api/Gastos
-                          - AppFinanzas/Api/Usuarios
-                          - AppFinanzas/frontend
-                        - Output Directory: ./publish
-                        ========================
-                    """
+                    echo 'Building the project for Api/Gastos...'
+                    // Ajusta la ruta al archivo .csproj para la compilación
+                    sh 'dotnet build AppFinanzas/Api/Gastos/Gastos.csproj -c Release'
+                    
+                    echo 'Building the project for Api/Usuarios...'
+                    // Ajusta la ruta al archivo .csproj para la compilación
+                    sh 'dotnet build AppFinanzas/Api/Usuarios/Usuarios.csproj -c Release'
+                    
+                    echo 'Building the project for frontend...'
+                    // Ajusta la ruta al archivo .csproj para la compilación
+                    sh 'dotnet build AppFinanzas/frontend/frontend.csproj -c Release'
                 }
             }
         }
 
         stage('Archive Artifacts') {
             steps {
-                // Archiva los binarios generados y el archivo de resumen
-                archiveArtifacts artifacts: 'publish/**/*, build_summary.txt', allowEmptyArchive: true
+                script {
+                    echo 'Archiving build artifacts for Api/Gastos...'
+                    // Ajusta la ruta a los archivos binarios generados por la compilación
+                    archiveArtifacts artifacts: 'AppFinanzas/Api/Gastos/bin/Release/net8.0/*', allowEmptyArchive: true
+                    
+                    echo 'Archiving build artifacts for Api/Usuarios...'
+                    // Ajusta la ruta a los archivos binarios generados por la compilación
+                    archiveArtifacts artifacts: 'AppFinanzas/Api/Usuarios/bin/Release/net8.0/*', allowEmptyArchive: true
+                    
+                    echo 'Archiving build artifacts for frontend...'
+                    // Ajusta la ruta a los archivos binarios generados por la compilación
+                    archiveArtifacts artifacts: 'AppFinanzas/frontend/bin/Release/net8.0/*', allowEmptyArchive: true
+                }
             }
-        }
-    }
-
-    post {
-        always {
-            // Limpia el workspace después de la ejecución
-            cleanWs()
         }
     }
 }
