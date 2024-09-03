@@ -1,67 +1,77 @@
 pipeline {
     agent any
 
-    parameters {
-        choice choices: ['Baseline', 'APIS', 'Full'], description: 'Type of scan that is going to perform inside the container', name: 'SCAN_TYPE'
-        
-        booleanParam(name: 'RUN_PROBAR_APLICACION', defaultValue: true, description: 'Probar aplicación')
-        booleanParam(name: 'RUN_CORRER_PRUEBAS', defaultValue: true, description: 'Correr pruebas')
-        booleanParam(name: 'GENERATE_REPORT', defaultValue: true, description: 'Parameter to know if wanna generate report.')
-        booleanParam(name: 'GENERAR_INFORME_PDF', defaultValue: false, description: 'Generar informe de seguridad en PDF')
-    }
-
     stages {
-        stage('Pipeline Info') {
+        stage('Checkout') {
+            steps {
+                // Clona el repositorio desde GitHub
+                git branch: 'main', url: 'https://github.com/Melvin3107/AppFinanzas.git'
+            }
+        }
+
+        stage('Restore Dependencies') {
             steps {
                 script {
-                    echo '<--Parameter Initialization-->'
-                    echo """
-                        The current parameters are:
-                            Scan Type: ${params.SCAN_TYPE}
-                            Generate Report: ${params.GENERATE_REPORT}
-                            Generate PDF Report: ${params.GENERAR_INFORME_PDF}
-                            Run Probar Aplicación: ${params.RUN_PROBAR_APLICACION}
-                            Run Correr Pruebas: ${params.RUN_CORRER_PRUEBAS}
-                        """
+                    // Restaura los paquetes necesarios para todos los proyectos
+                    sh 'dotnet restore AppFinanzas/Api/Gastos/Gastos.csproj'
+                    sh 'dotnet restore AppFinanzas/Api/Usuarios/Usuarios.csproj'
+                    sh 'dotnet restore AppFinanzas/frontend/frontend.csproj'
                 }
             }
         }
 
-        stage('Build and Start Containers') {
+        stage('Build Projects') {
             steps {
                 script {
-                    echo 'Building and starting Docker Compose services...'
-                    sh 'docker-compose up -d'  // Levanta todos los contenedores en segundo plano
+                    // Compila los proyectos
+                    sh 'dotnet build AppFinanzas/Api/Gastos/Gastos.csproj --configuration Release'
+                    sh 'dotnet build AppFinanzas/Api/Usuarios/Usuarios.csproj --configuration Release'
+                    sh 'dotnet build AppFinanzas/frontend/frontend.csproj --configuration Release'
                 }
             }
         }
 
-        stage('Generate Report') {
-            when {
-                expression { params.GENERATE_REPORT }
-            }
+        stage('Publish Projects') {
             steps {
                 script {
-                    echo 'Generating report...'
-                    sh 'echo "This is a sample report" > report.txt'
+                    // Publica los proyectos y guarda los binarios en una carpeta específica
+                    sh 'dotnet publish AppFinanzas/Api/Gastos/Gastos.csproj --configuration Release --output ./publish/Gastos'
+                    sh 'dotnet publish AppFinanzas/Api/Usuarios/Usuarios.csproj --configuration Release --output ./publish/Usuarios'
+                    sh 'dotnet publish AppFinanzas/frontend/frontend.csproj --configuration Release --output ./publish/frontend'
+                }
+            }
+        }
+
+        stage('Generate Build Summary') {
+            steps {
+                script {
+                    // Crea un archivo de resumen con la información de la compilación
+                    writeFile file: 'build_summary.txt', text: """
+                        Build Summary:
+                        ========================
+                        - Date: ${new Date()}
+                        - Projects Compiled:
+                          - AppFinanzas/Api/Gastos
+                          - AppFinanzas/Api/Usuarios
+                          - AppFinanzas/frontend
+                        - Output Directory: ./publish
+                        ========================
+                    """
                 }
             }
         }
 
         stage('Archive Artifacts') {
             steps {
-                script {
-                    echo 'Archiving generated files...'
-                    archiveArtifacts artifacts: 'report.txt', allowEmptyArchive: true
-                }
+                // Archiva los binarios generados y el archivo de resumen
+                archiveArtifacts artifacts: 'publish/**/*, build_summary.txt', allowEmptyArchive: true
             }
         }
     }
 
     post {
         always {
-            echo 'Stopping and removing Docker Compose services...'
-            sh 'docker-compose down'  // Detiene y elimina todos los contenedores, redes y volúmenes
+            // Limpia el workspace después de la ejecución
             cleanWs()
         }
     }
