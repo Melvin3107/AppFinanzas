@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        // Habilitar diagnóstico para la ejecución de scripts
+        JENKINS_DURABLETASK_BOURNE_SHELL_LAUNCH_DIAGNOSTICS = 'true'
+    }
+    
     stages {
         stage('Checkout') {
             steps {
