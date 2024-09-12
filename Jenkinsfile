@@ -24,11 +24,12 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir("${WORKSPACE_DIR}/AppFinanzas") {
+                dir("${WORKSPACE_DIR}/AppFinanzas/frontend") {
                     // Compila el código
                     sh 'dotnet build -c Release'
                 }
             }
+
         }
 
         stage('Decompile with ILSpy') {
