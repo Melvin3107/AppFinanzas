@@ -6,7 +6,7 @@ pipeline {
         REPO_URL = 'https://github.com/Melvin3107/AppFinanzas.git'
         ILSPY_REPO = 'https://github.com/icsharpcode/ILSpy.git'
         OBFSCR_REPO = 'https://github.com/obfuscar/obfuscar.git'
-        WORKSPACE_DIR = '/workspace'
+        WORKSPACE_DIR = '/var/jenkins_home/workspace'
         DLL_FILE = 'AppFinanzas.dll'
     }
 
