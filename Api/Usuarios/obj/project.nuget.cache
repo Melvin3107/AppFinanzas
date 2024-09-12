@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "g7feixIZ++s=",
+  "dgSpecHash": "TUDvi1h1mUw=",
   "success": true,
   "projectFilePath": "D:\\AppFinanzas\\Api\\Usuarios\\Usuarios.csproj",
   "expectedPackageFiles": [
@@ -41,6 +41,7 @@
     "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\npgsql\\8.0.0\\npgsql.8.0.0.nupkg.sha512",
     "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.0\\npgsql.entityframeworkcore.postgresql.8.0.0.nupkg.sha512",
+    "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\preemptive.protection.checks.attributes\\2.0.0\\preemptive.protection.checks.attributes.2.0.0.nupkg.sha512",
     "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
     "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\system.composition\\6.0.0\\system.composition.6.0.0.nupkg.sha512",

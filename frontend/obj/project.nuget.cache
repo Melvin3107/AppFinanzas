@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "9341K5gxkOU=",
+  "dgSpecHash": "livxog9BOrQ=",
   "success": true,
   "projectFilePath": "D:\\AppFinanzas\\frontend\\frontend.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\preemptive.protection.checks.attributes\\2.0.0\\preemptive.protection.checks.attributes.2.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

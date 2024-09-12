@@ -1,11 +1,43 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "PreEmptive.Protection.Checks.Attributes/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/PreEmptive.Attributes.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/PreEmptive.Attributes.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "PreEmptive.Protection.Checks.Attributes/2.0.0": {
+      "sha512": "eoWNPH6i0EDpopw9CyGgsYZQLDKwXhErliwqZltVDnz8bQJQVKggIBBwbFoIyCDeVoIyUDzV2opwnQ61zR5vAg==",
+      "type": "package",
+      "path": "preemptive.protection.checks.attributes/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net11/PreEmptive.Attributes.dll",
+        "lib/net11/PreEmptive.Attributes.xml",
+        "lib/netstandard2.0/PreEmptive.Attributes.dll",
+        "lib/netstandard2.0/PreEmptive.Attributes.xml",
+        "preemptive.protection.checks.attributes.2.0.0.nupkg.sha512",
+        "preemptive.protection.checks.attributes.nuspec"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "PreEmptive.Protection.Checks.Attributes >= 2.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\BEST COMPUTER\\.nuget\\packages\\": {}
@@ -21,12 +53,14 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "D:\\AppFinanzas\\NuGet.Config",
-        "C:\\Users\\BEST COMPUTER\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\BEST COMPUTER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -49,6 +83,12 @@
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
+        "dependencies": {
+          "PreEmptive.Protection.Checks.Attributes": {
+            "target": "Package",
+            "version": "[2.0.0, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

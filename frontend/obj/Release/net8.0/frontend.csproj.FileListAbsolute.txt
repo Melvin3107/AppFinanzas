@@ -14,7 +14,6 @@ D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.csproj.CoreCompileInputs.cac
 D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.MvcApplicationPartsAssemblyInfo.cache
 D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.RazorAssemblyInfo.cache
 D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.RazorAssemblyInfo.cs
-D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.sourcelink.json
 D:\AppFinanzas\frontend\obj\Release\net8.0\staticwebassets.build.json
 D:\AppFinanzas\frontend\obj\Release\net8.0\staticwebassets.development.json
 D:\AppFinanzas\frontend\obj\Release\net8.0\staticwebassets\msbuild.frontend.Microsoft.AspNetCore.StaticWebAssets.props
@@ -28,3 +27,6 @@ D:\AppFinanzas\frontend\obj\Release\net8.0\refint\frontend.dll
 D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.pdb
 D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.genruntimeconfig.cache
 D:\AppFinanzas\frontend\obj\Release\net8.0\ref\frontend.dll
+D:\AppFinanzas\frontend\bin\Release\net8.0\PreEmptive.Attributes.dll
+D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.csproj.AssemblyReference.cache
+D:\AppFinanzas\frontend\obj\Release\net8.0\frontend.csproj.Up2Date

@@ -91,3 +91,4 @@ D:\AppFinanzas\Api\Usuarios\obj\Release\net8.0\refint\Usuarios.dll
 D:\AppFinanzas\Api\Usuarios\obj\Release\net8.0\Usuarios.pdb
 D:\AppFinanzas\Api\Usuarios\obj\Release\net8.0\Usuarios.genruntimeconfig.cache
 D:\AppFinanzas\Api\Usuarios\obj\Release\net8.0\ref\Usuarios.dll
+D:\AppFinanzas\Api\Usuarios\bin\Release\net8.0\PreEmptive.Attributes.dll

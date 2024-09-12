@@ -807,6 +807,19 @@
           }
         }
       },
+      "PreEmptive.Protection.Checks.Attributes/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/PreEmptive.Attributes.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/PreEmptive.Attributes.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "System.CodeDom/4.4.0": {
         "type": "package",
         "compile": {
@@ -2395,6 +2408,21 @@
         "postgresql.png"
       ]
     },
+    "PreEmptive.Protection.Checks.Attributes/2.0.0": {
+      "sha512": "eoWNPH6i0EDpopw9CyGgsYZQLDKwXhErliwqZltVDnz8bQJQVKggIBBwbFoIyCDeVoIyUDzV2opwnQ61zR5vAg==",
+      "type": "package",
+      "path": "preemptive.protection.checks.attributes/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net11/PreEmptive.Attributes.dll",
+        "lib/net11/PreEmptive.Attributes.xml",
+        "lib/netstandard2.0/PreEmptive.Attributes.dll",
+        "lib/netstandard2.0/PreEmptive.Attributes.xml",
+        "preemptive.protection.checks.attributes.2.0.0.nupkg.sha512",
+        "preemptive.protection.checks.attributes.nuspec"
+      ]
+    },
     "System.CodeDom/4.4.0": {
       "sha512": "2sCCb7doXEwtYAbqzbF/8UAeDRMNmPaQbU2q50Psg1J9KzumyVVCgKQY8s53WIPTufNT0DpSe9QRvVjOzfDWBA==",
       "type": "package",
@@ -2827,7 +2855,8 @@
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.0",
       "Microsoft.Extensions.Configuration >= 8.0.0",
       "Microsoft.Extensions.Configuration.Json >= 8.0.0",
-      "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.0"
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.0",
+      "PreEmptive.Protection.Checks.Attributes >= 2.0.0"
     ]
   },
   "packageFolders": {
@@ -2844,12 +2873,14 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "D:\\AppFinanzas\\NuGet.Config",
-        "C:\\Users\\BEST COMPUTER\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\BEST COMPUTER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2900,6 +2931,10 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
             "version": "[8.0.0, )"
+          },
+          "PreEmptive.Protection.Checks.Attributes": {
+            "target": "Package",
+            "version": "[2.0.0, )"
           }
         },
         "imports": [

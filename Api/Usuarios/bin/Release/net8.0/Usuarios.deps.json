@@ -14,7 +14,8 @@
           "Microsoft.EntityFrameworkCore.Tools": "8.0.0",
           "Microsoft.Extensions.Configuration": "8.0.0",
           "Microsoft.Extensions.Configuration.Json": "8.0.0",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0"
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0",
+          "PreEmptive.Protection.Checks.Attributes": "2.0.0"
         },
         "runtime": {
           "Usuarios.dll": {}
@@ -486,6 +487,14 @@
           }
         }
       },
+      "PreEmptive.Protection.Checks.Attributes/2.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/PreEmptive.Attributes.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "System.CodeDom/4.4.0": {
         "runtime": {
           "lib/netstandard2.0/System.CodeDom.dll": {
@@ -844,6 +853,13 @@
       "sha512": "sha512-GDXiMS9peEdjSCU/rfgyHruio7q6tYuywGaktqEi6UPQ6ILechp3fVVX+dHXkIXt4nklCBzYVWkzFrSL9ubKUA==",
       "path": "npgsql.entityframeworkcore.postgresql/8.0.0",
       "hashPath": "npgsql.entityframeworkcore.postgresql.8.0.0.nupkg.sha512"
+    },
+    "PreEmptive.Protection.Checks.Attributes/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eoWNPH6i0EDpopw9CyGgsYZQLDKwXhErliwqZltVDnz8bQJQVKggIBBwbFoIyCDeVoIyUDzV2opwnQ61zR5vAg==",
+      "path": "preemptive.protection.checks.attributes/2.0.0",
+      "hashPath": "preemptive.protection.checks.attributes.2.0.0.nupkg.sha512"
     },
     "System.CodeDom/4.4.0": {
       "type": "package",

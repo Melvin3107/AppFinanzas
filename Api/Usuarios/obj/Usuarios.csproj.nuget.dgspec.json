@@ -15,12 +15,14 @@
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "D:\\AppFinanzas\\NuGet.Config",
-          "C:\\Users\\BEST COMPUTER\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\BEST COMPUTER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -71,6 +73,10 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "PreEmptive.Protection.Checks.Attributes": {
+              "target": "Package",
+              "version": "[2.0.0, )"
             }
           },
           "imports": [

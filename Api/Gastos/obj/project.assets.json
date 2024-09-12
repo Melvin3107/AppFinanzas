@@ -825,6 +825,19 @@
           }
         }
       },
+      "PreEmptive.Protection.Checks.Attributes/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/PreEmptive.Attributes.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/PreEmptive.Attributes.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
         "type": "package",
         "runtimeTargets": {
@@ -1892,7 +1905,8 @@
           "Microsoft.EntityFrameworkCore.Tools": "8.0.0",
           "Microsoft.Extensions.Configuration": "8.0.0",
           "Microsoft.Extensions.Configuration.Json": "8.0.0",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0"
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0",
+          "PreEmptive.Protection.Checks.Attributes": "2.0.0"
         },
         "compile": {
           "bin/placeholder/Usuarios.dll": {}
@@ -3250,6 +3264,21 @@
         "npgsql.entityframeworkcore.postgresql.8.0.0.nupkg.sha512",
         "npgsql.entityframeworkcore.postgresql.nuspec",
         "postgresql.png"
+      ]
+    },
+    "PreEmptive.Protection.Checks.Attributes/2.0.0": {
+      "sha512": "eoWNPH6i0EDpopw9CyGgsYZQLDKwXhErliwqZltVDnz8bQJQVKggIBBwbFoIyCDeVoIyUDzV2opwnQ61zR5vAg==",
+      "type": "package",
+      "path": "preemptive.protection.checks.attributes/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net11/PreEmptive.Attributes.dll",
+        "lib/net11/PreEmptive.Attributes.xml",
+        "lib/netstandard2.0/PreEmptive.Attributes.dll",
+        "lib/netstandard2.0/PreEmptive.Attributes.xml",
+        "preemptive.protection.checks.attributes.2.0.0.nupkg.sha512",
+        "preemptive.protection.checks.attributes.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
@@ -5719,6 +5748,7 @@
       "Microsoft.Extensions.Configuration >= 8.0.0",
       "Microsoft.Extensions.Configuration.Json >= 8.0.0",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.0",
+      "PreEmptive.Protection.Checks.Attributes >= 2.0.0",
       "System.Net.Http >= 4.3.4",
       "Usuarios >= 1.0.0"
     ]
@@ -5737,12 +5767,14 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "D:\\AppFinanzas\\NuGet.Config",
-        "C:\\Users\\BEST COMPUTER\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\BEST COMPUTER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -5797,6 +5829,10 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
             "version": "[8.0.0, )"
+          },
+          "PreEmptive.Protection.Checks.Attributes": {
+            "target": "Package",
+            "version": "[2.0.0, )"
           },
           "System.Net.Http": {
             "target": "Package",
