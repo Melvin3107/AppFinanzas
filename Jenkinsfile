@@ -11,6 +11,19 @@ pipeline {
     }
 
     stages {
+        
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    // Eliminar el directorio de trabajo de AppFinanzas si existe
+                    def appFinanzasDir = "${WORKSPACE_DIR}/AppFinanzas"
+                    if (fileExists(appFinanzasDir)) {
+                        sh "rm -rf ${appFinanzasDir}"
+                    }
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 script {
