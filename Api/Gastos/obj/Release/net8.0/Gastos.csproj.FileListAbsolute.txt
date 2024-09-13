@@ -97,3 +97,4 @@ D:\AppFinanzas\Api\Gastos\obj\Release\net8.0\Gastos.pdb
 D:\AppFinanzas\Api\Gastos\obj\Release\net8.0\Gastos.genruntimeconfig.cache
 D:\AppFinanzas\Api\Gastos\obj\Release\net8.0\ref\Gastos.dll
 D:\AppFinanzas\Api\Gastos\bin\Release\net8.0\PreEmptive.Attributes.dll
+D:\AppFinanzas\Api\Gastos\bin\Release\net8.0\Usuarios.xml
