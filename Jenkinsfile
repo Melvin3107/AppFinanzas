@@ -13,12 +13,24 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clona el repositorio de código
-                git url: "${REPO_URL}", branch: 'main'
-                
-                // Clona los repositorios de ILSpy y Obfuscar
-                sh "git clone ${ILSPY_REPO} ${WORKSPACE_DIR}/ILSpy"
-                sh "git clone ${OBFSCR_REPO} ${WORKSPACE_DIR}/Obfuscar"
+                script {
+                    // Clona el repositorio de código
+                    git url: "${REPO_URL}", branch: 'main'
+
+                    // Clona los repositorios de ILSpy y Obfuscar, manejando directorios existentes
+                    def ilspyDir = "${WORKSPACE_DIR}/ILSpy"
+                    def obfuscarDir = "${WORKSPACE_DIR}/Obfuscar"
+
+                    if (fileExists(ilspyDir)) {
+                        sh "rm -rf ${ilspyDir}"
+                    }
+                    sh "git clone ${ILSPY_REPO} ${ilspyDir}"
+
+                    if (fileExists(obfuscarDir)) {
+                        sh "rm -rf ${obfuscarDir}"
+                    }
+                    sh "git clone ${OBFSCR_REPO} ${obfuscarDir}"
+                }
             }
         }
 
